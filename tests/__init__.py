@@ -125,7 +125,8 @@ class TestDrive(unittest.TestCase):
     def test_supportsSctTempQuery(self):
         """Test detection for "SCT" temp query."""
         with unittest.mock.patch("hddfancontrol.subprocess.check_output") as subprocess_check_output_mock:
-            subprocess_check_output_mock.return_value = """smartctl 7.0 2018-12-30 r4883 [x86_64-linux-4.19.36-1-lts] (local build)
+            subprocess_check_output_mock.return_value = """
+smartctl 7.0 2018-12-30 r4883 [x86_64-linux-4.19.36-1-lts] (local build)
 Copyright (C) 2002-18, Bruce Allen, Christian Franke, www.smartmontools.org
 
 === START OF READ SMART DATA SECTION ===
@@ -140,7 +141,7 @@ Vendor specific:
 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 
-"""
+""".lstrip()
             self.assertTrue(self.drive.supportsSctTempQuery())
             subprocess_check_output_mock.assert_called_once_with(
                 ("smartctl", "-l", "scttempsts", "/dev/_sdz"),
@@ -149,13 +150,14 @@ Vendor specific:
                 universal_newlines=True,
             )
         with unittest.mock.patch("hddfancontrol.subprocess.check_output") as subprocess_check_output_mock:
-            subprocess_check_output_mock.return_value = """smartctl 7.0 2018-12-30 r4883 [x86_64-linux-4.19.36-1-lts] (local build)
+            subprocess_check_output_mock.return_value = """
+smartctl 7.0 2018-12-30 r4883 [x86_64-linux-4.19.36-1-lts] (local build)
 Copyright (C) 2002-18, Bruce Allen, Christian Franke, www.smartmontools.org
 
 === START OF READ SMART DATA SECTION ===
 SCT Commands not supported
 
-"""
+""".lstrip()
             self.assertFalse(self.drive.supportsSctTempQuery())
             subprocess_check_output_mock.assert_called_once_with(
                 ("smartctl", "-l", "scttempsts", "/dev/_sdz"),
@@ -270,7 +272,8 @@ SCT Commands not supported
         # smartctl -l scttempsts call
         self.drive.temp_query_method = hddfancontrol.Drive.TempProbingMethod.SMARTCTL_SCT_INVOCATION
         with unittest.mock.patch("hddfancontrol.subprocess.check_output") as subprocess_check_output_mock:
-            subprocess_check_output_mock.return_value = """smartctl 7.0 2018-12-30 r4883 [x86_64-linux-4.19.36-1-lts] (local build)
+            subprocess_check_output_mock.return_value = """
+smartctl 7.0 2018-12-30 r4883 [x86_64-linux-4.19.36-1-lts] (local build)
 Copyright (C) 2002-18, Bruce Allen, Christian Franke, www.smartmontools.org
 
 === START OF READ SMART DATA SECTION ===
@@ -285,7 +288,7 @@ Vendor specific:
 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 
-"""
+""".lstrip()
             self.assertEqual(self.drive.getTemperature(), 30)
             subprocess_check_output_mock.assert_called_once_with(
                 ("smartctl", "-l", "scttempsts", "/dev/_sdz"),
@@ -297,7 +300,8 @@ Vendor specific:
         # smartctl -A call
         self.drive.temp_query_method = hddfancontrol.Drive.TempProbingMethod.SMARTCTL_ATTRIB_INVOCATION
         with unittest.mock.patch("hddfancontrol.subprocess.check_output") as subprocess_check_output_mock:
-            subprocess_check_output_mock.return_value = """smartctl 7.0 2018-12-30 r4883 [x86_64-linux-4.19.36-1-lts] (local build)
+            subprocess_check_output_mock.return_value = """
+smartctl 7.0 2018-12-30 r4883 [x86_64-linux-4.19.36-1-lts] (local build)
 Copyright (C) 2002-18, Bruce Allen, Christian Franke, www.smartmontools.org
 
 === START OF READ SMART DATA SECTION ===
@@ -322,7 +326,7 @@ ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_
 198 Offline_Uncorrectable   0x0008   100   100   000    Old_age   Offline      -       0
 199 UDMA_CRC_Error_Count    0x000a   200   200   000    Old_age   Always       -       0
 
-"""
+""".lstrip()
             self.assertEqual(self.drive.getTemperature(), 35)
             subprocess_check_output_mock.assert_called_once_with(
                 ("smartctl", "-A", "/dev/_sdz"),
@@ -334,7 +338,8 @@ ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_
         # smartctl -A call, alternate output
         with unittest.mock.patch("hddfancontrol.subprocess.check_output") as subprocess_check_output_mock:
             # https://github.com/smartmontools/smartmontools/blob/28bd62a76e0e81f336bf44809467c7406866d1ea/www/examples/ST910021AS.txt#L64
-            subprocess_check_output_mock.return_value = """smartctl version 5.39 [i386-apple-darwin8.11.1] Copyright (C) 2002-8 Bruce Allen
+            subprocess_check_output_mock.return_value = """
+smartctl version 5.39 [i386-apple-darwin8.11.1] Copyright (C) 2002-8 Bruce Allen
 Home page is http://smartmontools.sourceforge.net/
 
 === START OF READ SMART DATA SECTION ===
@@ -361,7 +366,7 @@ ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_
 200 Multi_Zone_Error_Rate   0x0000   100   253   000    Old_age   Offline      -       0
 202 TA_Increase_Count       0x0032   100   253   000    Old_age   Always       -       0
 
-"""
+""".lstrip()
             self.assertEqual(self.drive.getTemperature(), 44)
             subprocess_check_output_mock.assert_called_once_with(
                 ("smartctl", "-A", "/dev/_sdz"),
@@ -372,7 +377,8 @@ ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_
 
         # smartctl -A call, alternate output
         with unittest.mock.patch("hddfancontrol.subprocess.check_output") as subprocess_check_output_mock:
-            subprocess_check_output_mock.return_value = """smartctl 6.6 2017-11-05 r4594 [x86_64-linux-4.20.17-gentoo] (local build)
+            subprocess_check_output_mock.return_value = """
+smartctl 6.6 2017-11-05 r4594 [x86_64-linux-4.20.17-gentoo] (local build)
 Copyright (C) 2002-17, Bruce Allen, Christian Franke, www.smartmontools.org
 
 === START OF SMART DATA SECTION ===
@@ -395,7 +401,7 @@ Error Information Log Entries: 0
 Warning Comp. Temperature Time: 0
 Critical Comp. Temperature Time: 0
 
-"""
+""".lstrip()
             self.assertEqual(self.drive.getTemperature(), 37)
             subprocess_check_output_mock.assert_called_once_with(
                 ("smartctl", "-A", "/dev/_sdz"),
@@ -406,7 +412,8 @@ Critical Comp. Temperature Time: 0
 
         # smartctl -A call, alternate output
         with unittest.mock.patch("hddfancontrol.subprocess.check_output") as subprocess_check_output_mock:
-            subprocess_check_output_mock.return_value = """smartctl version 5.37 [i686-pc-linux-gnu] Copyright (C) 2002-6 Bruce Allen
+            subprocess_check_output_mock.return_value = """
+smartctl version 5.37 [i686-pc-linux-gnu] Copyright (C) 2002-6 Bruce Allen
 Home page is http://smartmontools.sourceforge.net/
 
 Current Drive Temperature:     42 C
@@ -422,7 +429,7 @@ Vendor (Seagate/Hitachi) factory information
   number of hours powered up = 19.86
   number of minutes until next internal SMART test = 108
 
-"""
+""".lstrip()
             self.assertEqual(self.drive.getTemperature(), 42)
             subprocess_check_output_mock.assert_called_once_with(
                 ("smartctl", "-A", "/dev/_sdz"),
