@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools ~= 68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hddfancontrol"
+authors = [
+	{name = "desbma"},
+]
+description = "Control system fan speed by monitoring hard drive temperature"
+readme = "README.md"
+requires-python = ">=3.6"
+keywords = ["hdd", "drive", "temperature", "fan", "control", "speed"]
+license = {text = "GPL-3.0-only"}
+classifiers = [
+	"Development Status :: 5 - Production/Stable",
+	"Environment :: Console",
+	"Environment :: No Input/Output (Daemon)",
+	"Intended Audience :: End Users/Desktop",
+	"Intended Audience :: System Administrators",
+	"License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+	"Natural Language :: English",
+	"Operating System :: POSIX :: Linux",
+	"Programming Language :: Python",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3 :: Only",
+	"Programming Language :: Python :: 3.6",
+	"Programming Language :: Python :: 3.7",
+	"Programming Language :: Python :: 3.8",
+	"Programming Language :: Python :: 3.9",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11",
+	"Topic :: System :: Hardware",
+	"Topic :: System :: Monitoring",
+	"Topic :: Utilities",
+]
+dependencies = [
+	"python-daemon>=2.1.2",
+]
+dynamic = ["version"]
+
+[project.urls]
+Repository = "https://github.com/desbma/hddfancontrol"
+
+[project.scripts]
+hddfancontrol = "hddfancontrol:cl_main"
+
+[tool.setuptools]
+packages = ["hddfancontrol"]
+
+[tool.setuptools.dynamic]
+version = {attr = "hddfancontrol.__version__"}
+readme = {file = ["README.txt"], content-type = "text/markdown"}
