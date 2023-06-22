@@ -51,3 +51,8 @@ packages = ["hddfancontrol"]
 [tool.setuptools.dynamic]
 version = {attr = "hddfancontrol.__version__"}
 readme = {file = ["README.txt"], content-type = "text/markdown"}
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
