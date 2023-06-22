@@ -56,3 +56,8 @@ readme = {file = ["README.txt"], content-type = "text/markdown"}
 addopts = [
     "--import-mode=importlib",
 ]
+
+[tool.coverage.run]
+source_pkgs = [
+    "hddfancontrol",
+]
